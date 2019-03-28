@@ -7,6 +7,8 @@ import android.widget.FrameLayout;
 
 import com.example.unlarroom.fragment.BackCardFragment;
 import com.example.unlarroom.fragment.FrontCardFragment;
+import com.example.unlarroom.impl.FakeAuthenticator;
+import com.example.unlarroom.interfaces.AuthenticationResource;
 import com.example.unlarroom.interfaces.BasicActivityBehavior;
 
 public class MainActivity extends AppCompatActivity implements BasicActivityBehavior {
@@ -15,10 +17,14 @@ public class MainActivity extends AppCompatActivity implements BasicActivityBeha
 
     private FrameLayout fragmentContainerCard;
 
+    private AuthenticationResource authenticationResource = new FakeAuthenticator();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main); //Set main Layout for this Activity
+
+        checkIfIsLogged();
 
         setViewsReferences();
 
@@ -43,6 +49,12 @@ public class MainActivity extends AppCompatActivity implements BasicActivityBeha
                 flipCard();
             }
         });
+    }
+
+    private void checkIfIsLogged() {
+        if(authenticationResource.isLogged()) { //If is logged, directly call the main activity
+            authenticationResource.signIn(this);
+        }
     }
 
     private void flipCard() { //Define the logic for switch the card displayed
